@@ -78,5 +78,20 @@ sub xslt_record_processor_filters {
     return;
 }
 
+sub record_display_customizations {
+    my ( $self, $params ) = @_;
+
+    return q|
+    [% FOREACH field IN record.field('689') %]
+      [% IF field.subfield('a') %]
+        <span class="results_summary swk">
+            <span class="label">SWK: </span>
+            [% field.subfield('a') %]
+        </span>
+      [% END %]
+    [% END %]
+    |;
+}
+
 
 1;
