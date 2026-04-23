@@ -20,15 +20,16 @@ use Koha::Biblios;
 use C4::Biblio qw(ModBiblio);
 
 use Koha::Plugin::HKS3::AggregatedKeywords::Rewriter;
+use Koha::Filter::MARC::AggregatedKeywords;
 
-our $VERSION = "0.1.0";
+our $VERSION = "0.1.1";
 
 our $metadata = {
     name            => 'AggregatedKeywords',
     author          => 'HKS3 - Tadeusz Sośnierz',
     description     => 'Aggregate keywords on details pages',
     date_authored   => '2026-04-15',
-    date_updated    => '2026-04-15',
+    date_updated    => '2026-04-23',
     minimum_version => '25.11',
     maximum_version => undef,
     namespace       => 'hks3_aggregatedkeywords',
@@ -59,6 +60,7 @@ sub after_biblio_action {
 
         my $before = $record->as_formatted;
         Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($record);
+        Koha::Filter::MARC::AggregatedKeywords->filter($record);
         my $after = $record->as_formatted;
         # funny infinite recursion without this :)
         if ($before ne $after) {
@@ -71,8 +73,10 @@ sub after_biblio_action {
 
 sub xslt_record_processor_filters {
     my ( $self, $params ) = @_;
+    return; # we moved this to after_biblio_action for now
 
-    my $filters = $params->{filters} || [];
+    $params->{filters} //= [];
+    my $filters = $params->{filters};
     push @$filters, 'AggregatedKeywords';
 
     return;
@@ -83,7 +87,7 @@ sub record_display_customizations {
 
     return q|
     [% FOREACH field IN record.field('689') %]
-      [% IF field.subfield('a') %]
+      [% IF field.subfield('a') AND !field.subfield('A') %]
         <span class="results_summary swk">
             <span class="label">SWK: </span>
             [% field.subfield('a') %]

@@ -33,9 +33,6 @@ sub filter {
     my @swks = $record->field('689');
     my @to_delete;
     for (@swks) {
-        if ($_->subfield('A')) {
-            next;
-        }
         my $sf_a = $_->subfield('a');
         my $ind1 = $_->indicator(1);
         my $ind2 = $_->indicator(2);
