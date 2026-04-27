@@ -41,12 +41,10 @@ sub filter {
         push @to_delete, $_;
     }
 
-    $record->delete_fields(@to_delete);
-    
     for my $ind1 (sort keys %fields_by_ind1) {
         my @sorted_a = map { $_->[0] } sort { $a->[1] <=> $b->[1] } @{$fields_by_ind1{$ind1}};
         $record->append_fields(MARC::Field->new(
-            '689', '', '', a => join(' :: ', @sorted_a),
+            '653', '', '', a => join(' :: ', @sorted_a),
         ));
     }
 

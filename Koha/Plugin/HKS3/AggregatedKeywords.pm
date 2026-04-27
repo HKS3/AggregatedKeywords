@@ -60,6 +60,7 @@ sub after_biblio_action {
 
         my $before = $record->as_formatted;
         Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($record);
+        # we run this here to make it indexed
         Koha::Filter::MARC::AggregatedKeywords->filter($record);
         my $after = $record->as_formatted;
         # funny infinite recursion without this :)
