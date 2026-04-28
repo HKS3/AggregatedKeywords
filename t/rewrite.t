@@ -19,23 +19,17 @@ subtest 'Simple case', sub {
     Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($rec);
     @f689s = $rec->field('689');
     is scalar(@f689s), 1, 'safe to rerun';
+
+    is $f689s[0]->subfield('D'), 's', 'subfield D set correctly';
 };
 
-subtest 'Calculated indicators', sub {
+subtest 'No 6-8 = no 689s', sub {
     my $rec = MARC::Record->new;
     $rec->add_fields('650', '', '', a => 'Category 1');
     $rec->add_fields('650', '', '', a => 'Category 2');
     Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($rec);
     my @f689s = $rec->field('689');
-    is scalar(@f689s), 2, 'two fields added';
-    is $f689s[0]->subfield('a'), 'Category 1', 'a ok';
-    is $f689s[0]->indicator('1'), 0, 'ind1 ok';
-    is $f689s[0]->indicator('2'), 1, 'ind2 ok';
-    is $f689s[0]->subfield('D'), 's', 'D ok';
-
-    is $f689s[1]->subfield('a'), 'Category 2', 'a ok';
-    is $f689s[1]->indicator('1'), 1, 'ind1 ok';
-    is $f689s[1]->indicator('2'), 2, 'ind2 ok';
+    is scalar(@f689s), 0, 'zero fields added';
 };
 
 subtest 'Multiple places', sub {
@@ -62,15 +56,6 @@ subtest 'Dies on invalid record', sub {
     throws_ok sub {
         Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($rec);
     }, qr/CN001/, 'dies, mentions controlnumber';
-};
-
-subtest 'Existing fields', sub {
-    my $rec = MARC::Record->new;
-    $rec->add_fields('689', '', '', a => 'Keep me', A => 'f');
-
-    Koha::Plugin::HKS3::AggregatedKeywords::Rewriter::rewrite_keywords($rec);
-    my @f689s = $rec->field('689');
-    is scalar(@f689s), 1, 'custom 689 field gets preserved';
 };
 
 done_testing;

@@ -22,7 +22,7 @@ use MARC::Field;
 use base qw(Koha::RecordProcessor::Base);
 
 our $NAME = 'AggregatedKeywords';
-our $VERSION = '0.1.0';
+our $VERSION = '0.1.5';
 
 sub filter {
     my ( $self, $record ) = @_;

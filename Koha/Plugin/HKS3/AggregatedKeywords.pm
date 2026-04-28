@@ -22,14 +22,14 @@ use C4::Biblio qw(ModBiblio);
 use Koha::Plugin::HKS3::AggregatedKeywords::Rewriter;
 use Koha::Filter::MARC::AggregatedKeywords;
 
-our $VERSION = "0.1.4";
+our $VERSION = "0.1.5";
 
 our $metadata = {
     name            => 'AggregatedKeywords',
     author          => 'HKS3 - Tadeusz Sośnierz',
     description     => 'Aggregate keywords on details pages',
     date_authored   => '2026-04-15',
-    date_updated    => '2026-04-23',
+    date_updated    => '2026-04-28',
     minimum_version => '25.11',
     maximum_version => undef,
     namespace       => 'hks3_aggregatedkeywords',

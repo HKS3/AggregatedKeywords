@@ -10,6 +10,8 @@ sub rewrite_keywords {
     my @new_fields;
 
     my %tags = (
+        600 => { D => 'p' },
+        610 => { D => 'b' },
         630 => { D => 't' },
         650 => { D => 's' },
         648 => { D => 'h' }, # or 'z' ?
@@ -21,8 +23,11 @@ sub rewrite_keywords {
         my @fields = $record->field($tag);
         for my $field (@fields) {
             my $sf_a = $field->subfield('a');
-            my $sf_6 = $field->subfield('6') // $keyword_index;
-            my $sf_8 = $field->subfield('8') // ($keyword_index + 1);
+
+            # it's okay if these are empty,
+            # the loop below will do 0 iterations and generate no 689s
+            my $sf_6 = $field->subfield('6') // '';
+            my $sf_8 = $field->subfield('8') // '';
 
             my @split_sf6 = split ';', $sf_6;
             my @split_sf8 = split ';', $sf_8;
