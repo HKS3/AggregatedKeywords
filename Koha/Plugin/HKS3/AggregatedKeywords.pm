@@ -22,7 +22,7 @@ use C4::Biblio qw(ModBiblio);
 use Koha::Plugin::HKS3::AggregatedKeywords::Rewriter;
 use Koha::Filter::MARC::AggregatedKeywords;
 
-our $VERSION = "0.1.1";
+our $VERSION = "0.1.4";
 
 our $metadata = {
     name            => 'AggregatedKeywords',

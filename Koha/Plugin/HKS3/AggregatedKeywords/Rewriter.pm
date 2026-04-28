@@ -9,9 +9,15 @@ sub rewrite_keywords {
 
     my @new_fields;
 
-    my @tags = qw(630 648 650 651 655);
+    my %tags = (
+        630 => { D => 't' },
+        650 => { D => 's' },
+        648 => { D => 'h' }, # or 'z' ?
+        651 => { D => 'g' },
+        655 => { A => 'f' },
+    );
     my $keyword_index = 0;
-    for my $tag (@tags) {
+    for my $tag (keys %tags) {
         my @fields = $record->field($tag);
         for my $field (@fields) {
             my $sf_a = $field->subfield('a');
@@ -27,23 +33,14 @@ sub rewrite_keywords {
 
             for (my $i = 0; $i < @split_sf6; $i++) {
                 push @new_fields, MARC::Field->new(
-                    '689', $split_sf6[$i], $split_sf8[$i], a => $sf_a
+                    '689', $split_sf6[$i], $split_sf8[$i], a => $sf_a, %{$tags{$tag}},
                 );
                 $keyword_index++;
             }
         }
     }
 
-    my @to_delete;
-    my @f689 = $record->field('689');
-    for (@f689) {
-        my $sf_A = $_->subfield('A');
-        unless ($sf_A) {
-            push @to_delete, $_;
-        }
-    }
-
-    $record->delete_fields(@to_delete);
+    $record->delete_fields($record->field('689'));
 
     for (@new_fields) {
         $record->append_fields($_);

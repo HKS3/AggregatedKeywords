@@ -31,6 +31,7 @@ subtest 'Calculated indicators', sub {
     is $f689s[0]->subfield('a'), 'Category 1', 'a ok';
     is $f689s[0]->indicator('1'), 0, 'ind1 ok';
     is $f689s[0]->indicator('2'), 1, 'ind2 ok';
+    is $f689s[0]->subfield('D'), 's', 'D ok';
 
     is $f689s[1]->subfield('a'), 'Category 2', 'a ok';
     is $f689s[1]->indicator('1'), 1, 'ind1 ok';
